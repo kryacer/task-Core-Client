@@ -12,7 +12,7 @@
             voluptas eius illo quas, saepe voluptate pariatur in deleniti minus sint. Excepturi.
           </md-card-content>
           <md-card-actions>
-            <md-button>Action</md-button>
+            <md-button href="http://localhost:49262/api/values">Action</md-button>
             <md-button>Action</md-button>
           </md-card-actions>
         </md-card>

@@ -84,9 +84,9 @@
                 this.$toast.error({
                   
                   title: err.response.statusText,
-                  message: err.response.data,
-                  timeOut: 2500
-                   // message: err.response.data.ModelState[''][0],
+                  // message: err.response.data,
+                  timeOut: 2500,
+                    message: err.response.data.ModelState[''][0]
                 })
               } else {
                 this.$toast.error({

@@ -5,8 +5,8 @@ import axios from 'utilities/axios'
 const path = '/api/Tasks'
 
 export default {
-  create (obj) {
-    return axios.post(api.url + path, obj)
+  create (user, obj) {
+    return axios.post(`${api.url  }/api/Tasks/AddTask`, user, obj)
   },
 
   getDetails (obj) {

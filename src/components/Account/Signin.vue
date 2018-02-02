@@ -13,8 +13,8 @@
           </h1>
           <md-input-container :class="{'md-input-invalid': errors.has('UserName')}">
             <label>User Name</label>
-            <md-input name="Username"  data-vv-name="Username" data-vv-rules="required" type="Username" v-model="credentials.Username" v-validate :disabled="state.loading"></md-input>
-            <span class="md-error">{{errors.first('Username')}}</span>
+            <md-input name="UserName"  data-vv-name="UserName" data-vv-rules="required" type="UserName" v-model="credentials.UserName" v-validate :disabled="state.loading"></md-input>
+            <span class="md-error">{{errors.first('UserName')}}</span>
           </md-input-container>
           <md-input-container md-has-password :class="{'md-input-invalid': errors.has('Password')}">
             <label>Password</label>
@@ -39,7 +39,7 @@
     data () {
       return {
         credentials: {
-          Username: 'kryacer',
+          UserName: 'aaron',
           Password: '123456zZ'
         },
         state: {
@@ -70,8 +70,9 @@
                 })
               }
             })
-            .then(() => {
+            .then(response => {
               this.state.loading = false
+              console.log(response)
             })
         })
       }

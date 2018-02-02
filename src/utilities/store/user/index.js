@@ -33,7 +33,7 @@ export default {
         // account.getUserInfo().then(res => {
         //   context.commit('setUserInfo', res.data)
         // })
-        // console.log(resAuth.data)
+         // console.log(resAuth)
         context.commit('setUserInfo', resAuth.data)
       })
     },
@@ -44,7 +44,7 @@ export default {
       //     context.commit('removeAuthentication')
       //   })
       //   .catch(() => {})
-      context.commit('removeAuthentication')
+        context.commit('removeAuthentication')
     },
     // getUserInfo (context) {
     //   // account
@@ -55,9 +55,9 @@ export default {
     //   //   .catch(() => {})
     //   context.commit('setUserInfo', res.data)
     // },
-    getUserList () {
-      return account.getUserList()
-    }
+    // getUserList () {
+    //   return account.getUserList()
+    // }
   },
   getters: {
     getAuth (state) {
