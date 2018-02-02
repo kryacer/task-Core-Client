@@ -15,7 +15,7 @@ import 'assets/script/site'
 
 import 'assets/css/icon.css'
 import 'assets/css/animations.css'
-import 'assets/css/site.css'
+// import 'assets/css/site.css'
 
 import { app } from './app'
 

@@ -1,61 +1,103 @@
 <template>
-  <md-layout md-gutter>
-    <md-layout></md-layout>
-    <md-layout md-flex-large="33" md-flex-medium="50" md-flex-small="75" md-flex-xsmall="100">
+  <div>
+    <form novalidate class="md-layout" @submit.prevent="validateUser">
+      <md-card class="md-layout-item md-size-50 md-small-size-100">
+        <md-card-header>
+          <div class="md-title">Sign In</div>
+        </md-card-header>
 
-      <md-whiteframe md-tag="section" class="form">
-        <md-progress class="md-accent" :class="{'hidden': !state.loading}" md-indeterminate></md-progress>
-        <div class="form-container">
-          <h1>
-            <span>Signin</span>
-            <br/>
-            <span class="md-caption">Welcome back</span>
-          </h1>
-          <md-input-container :class="{'md-input-invalid': errors.has('UserName')}">
-            <label>User Name</label>
-            <md-input name="UserName"  data-vv-name="UserName" data-vv-rules="required" type="UserName" v-model="credentials.UserName" v-validate :disabled="state.loading"></md-input>
-            <span class="md-error">{{errors.first('UserName')}}</span>
-          </md-input-container>
-          <md-input-container md-has-password :class="{'md-input-invalid': errors.has('Password')}">
-            <label>Password</label>
-            <md-input name="Password" data-vv-name="Password" data-vv-rules="required|min:6" type="password" v-model="credentials.Password" v-validate :disabled="state.loading"></md-input>
-            <span class="md-error">{{errors.first('Password')}}</span>
-          </md-input-container>
-          <md-button class="md-raised md-accent" id="btnSubmit" @click.native="formValidate" :disabled="state.loading">Singin</md-button>
-        </div>
-        <div class="text-right">
-          <!-- <router-link class="md-accent" tag="md-button" to="/recover">Forgot password?</router-link> -->
-          <router-link class="md-accent" tag="md-button" to="/signup">Don't have an account?</router-link>
-        </div>
-      </md-whiteframe>
-    </md-layout>
-    <md-layout></md-layout>
-  </md-layout>
+        <md-card-content>
+          <div class="md-layout md-gutter">
+            <div class="md-layout-item md-small-size-100">
+              <md-field :class="getValidationClass('userName')">
+                <label for="user-name">User Name</label>
+                <md-input name="user-name" id="user-name" autocomplete="given-name" v-model="form.UserName" :disabled="sending" />
+                <span class="md-error" v-if="!$v.form.UserName.required">The user name is required</span>
+                <span class="md-error" v-else-if="!$v.form.UserName.minlength">Invalid user name</span>
+              </md-field>
+            </div>
+          </div>
+        <div class="md-layout md-gutter">
+            <div class="md-layout-item md-small-size-100">
+              <md-field :class="getValidationClass('Password')">
+                <label for="user-name">Password</label>
+                <md-input name="password" id="password" type="password" v-model="form.Password" :disabled="sending" />
+                <span class="md-error" v-if="!$v.form.Password.required">The password is required</span>
+                <span class="md-error" v-else-if="!$v.form.Password.minlength">Invalid password</span>
+              </md-field>
+            </div>
+          </div>
+
+        </md-card-content>
+
+        <md-progress-bar md-mode="indeterminate" v-if="sending" />
+
+        <md-card-actions>
+          <router-link class="md-primary" tag="md-button" to="/signup">Don't have an account?</router-link>
+          <md-button type="submit" class="md-primary" :disabled="sending">Sign In</md-button>
+        </md-card-actions>
+      </md-card>
+
+      <!-- <md-snackbar :md-active.sync="userSaved">The user {{ lastUser }} was saved with success!</md-snackbar> -->
+    </form>
+  </div>
 </template>
+
 <script>
   import { mapActions } from 'vuex'
+  import { validationMixin } from 'vuelidate'
+  import {
+    required,
+    minLength
+  } from 'vuelidate/lib/validators'
 
   export default {
-    data () {
-      return {
-        credentials: {
-          UserName: 'aaron',
-          Password: '123456zZ'
+    name: 'FormValidation',
+    mixins: [validationMixin],
+    data: () => ({
+      form: {
+        UserName: 'aaron',
+        Password: '123456zZ'
+      },
+      sending: false
+    }),
+    validations: {
+      form: {
+        UserName: {
+          required,
+          minLength: minLength(3)
         },
-        state: {
-          loading: false
+        Password: {
+          required,
+          minLength: minLength(6)
         }
       }
     },
     methods: {
+      getValidationClass (fieldName) {
+        const field = this.$v.form[fieldName]
 
+        if (field) {
+          return {
+            'md-invalid': field.$invalid && field.$dirty
+          }
+        }
+        return ""
+      },
       ...mapActions(['signin']),
-      formValidate (event) {
-        event.preventDefault()
-        this.$validator.validateAll().then(success => {
-          if (!success) return
-          this.state.loading = true
-          this.signin(this.credentials)
+      
+      clearForm () {
+        this.$v.$reset()
+        this.form.UserName = null
+        this.form.Password = null
+      },
+      
+      validateUser () {
+        this.$v.$touch()
+
+        if (!this.$v.$invalid) {
+          this.sending = true
+          this.signin(this.form)
             .catch(err => {
               console.dir(err)
               if (err.response && err.response.status === 400) {
@@ -70,14 +112,25 @@
                 })
               }
             })
-            .then(response => {
-              this.state.loading = false
-              console.log(response)
+            .then(()=> {
+              this.sending = false
             })
-        })
+        }
       }
-
-
     }
   }
 </script>
+
+<style  scoped>
+  .md-progress-bar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+  }
+  
+  .md-card{
+      overflow: hidden;
+      margin: 100px auto;
+  }
+</style>
