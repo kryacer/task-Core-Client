@@ -6,7 +6,7 @@ const path = '/api/Tasks'
 
 export default {
   create (obj) {
-    return axios.post(`${api.url  }/api/Tasks/AddTask`, user, obj)
+    return axios.post(`${api.url  }/api/Tasks/AddTask`, obj)
   },
 
   getDetails (obj) {
@@ -21,9 +21,6 @@ export default {
     return axios.post(`${api.url + path}/Remove/?id=${obj.id}`, obj)
   },
 
-  // restore (obj) {
-  //   return axios.post(`${api.url + path}/Restore/?id=${obj.id}`, obj)
-  // },
 
   delete (obj) {
     return axios.post(api.url + path, obj)
