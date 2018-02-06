@@ -8,7 +8,7 @@
   </md-layout>
 </template>
 <script>
-  import taskCreate from 'components/Management/Tasks/_partial_create.vue'
+  import taskCreate from 'components/Tasks/Undone/_partial_create.vue'
 
   export default {
     components: {

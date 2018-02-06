@@ -1,5 +1,6 @@
 <template>
-<input type="text" v-model="editableTags">
+<!-- <input type="text" v-model="editableTags"> -->
+<md-input type="text" name="tags" id="Tags" autocomplete="tags" v-model="editableTags" />
 </template>
 <script>
 export default {

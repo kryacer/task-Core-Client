@@ -2,11 +2,11 @@ import api from 'api'
 // eslint-disable-next-line
 import axios from 'utilities/axios'
 
-const path = '/api/Tasks'
+ const path = '/api/Tasks'
 
 export default {
   create (obj) {
-    return axios.post(`${api.url  }/api/Tasks/AddTask`, obj)
+    return axios.post(`${api.url}/Task/Add`, obj)
   },
 
   getDetails (obj) {
@@ -26,9 +26,15 @@ export default {
     return axios.post(api.url + path, obj)
   },
 
-  list (type, obj) {
-    return axios.get(`${api.url + path}?type=${type}${this.objToQuery(obj)}`)
+  list () {
+    return axios.get(`${api.url}/Task/GetAll`)
   },
+  oppositeMark (obj){
+    return axios.post(`${api.url}/task/oppositeMark`, obj)
+  },
+  // list (type, obj) {
+  //   return axios.get(`${api.url + path}?type=${type}${this.objToQuery(obj)}`)
+  // },
 
   objToQuery (obj) {
     let query = ''

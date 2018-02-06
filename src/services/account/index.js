@@ -22,15 +22,16 @@ export default {
   // }
 
   signup (obj) {
-    return axios.post(`${api.url}/Users/Register`, obj)
+    return axios.post(`${api.url}/Account/Register`, obj)
   },
   signin (obj) {
     // eslint-disable-next-line
     obj.grant_type = 'password'
     
-    return axios.post(`${api.url}/Users/Login`, obj)
+    return axios.post(`${api.url}/Account/Login`, qs.stringify(obj))
   },
   signout () {
+   
     return axios.post(`${api.url}/Account/Logout`)
   },
   // getUserInfo () {

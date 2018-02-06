@@ -2,12 +2,15 @@ import axios from 'axios'
 import store from 'utilities/store'
 import router from 'utilities/router'
 
+ axios.defaults.withCredentials = true
 axios.interceptors.request.use(
   cfg => {
     if (store.getters.isAuthenticated) {
       const auth = store.getters.getAuth
+      
       // eslint-disable-next-line
       cfg.headers.Authorization = `${auth.token_type} ${auth.access_token}`
+      // console.log(cfg)
     }
     return cfg
   },
@@ -24,7 +27,7 @@ axios.interceptors.response.use(
         router.push({
           path: '/signin',
           query: {
-            redirect: router.app._route.fullPath
+            redirect: router.app._route.fullPath 
           }
         })
         break

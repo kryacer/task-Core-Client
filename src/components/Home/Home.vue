@@ -10,7 +10,7 @@
       </md-card-content>
 
       <md-card-actions>
-        <md-button>Action</md-button>
+        <md-button href="http://localhost:49262/api/values">Action</md-button>
         <md-button>Action</md-button>
       </md-card-actions>
     </md-card>
@@ -35,7 +35,7 @@
   </div>
 </template>
 
-<style scoped>
+<style>
   .md-card {
     width: 320px;
     margin: 4px;

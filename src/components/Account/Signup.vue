@@ -1,90 +1,167 @@
 <template>
-  <md-layout md-gutter>
-    <md-layout></md-layout>
-    <md-layout md-flex-large="33" md-flex-medium="50" md-flex-small="75" md-flex-xsmall="100">
-      <md-whiteframe md-tag="section" class="form">
-        <md-progress class="md-accent" :class="{'hidden': !state.loading}" md-indeterminate></md-progress>
-        <div class="form-container">
-          <h1>
-            <span>Register</span>
-            <br/>
-            <span class="md-caption">Get started</span>
-          </h1>
-          <md-input-container :class="{'md-input-invalid': errors.has('FirstName')}">
-            <label>First Name</label>
-            <md-input name="FirstName" data-vv-name="FirstName" data-vv-rules="required" type="FirstName" v-model="credentials.FirstName" v-validate :disabled="state.loading"></md-input>
-            <span class="md-error">{{errors.first('FirstName')}}</span>
-          </md-input-container>
-          <md-input-container :class="{'md-input-invalid': errors.has('LastName')}">
-            <label>Last Name</label>
-            <md-input name="LastName" data-vv-name="LastName" data-vv-rules="required" type="LastName" v-model="credentials.LastName" v-validate :disabled="state.loading"></md-input>
-            <span class="md-error">{{errors.first('LastName')}}</span>
-          </md-input-container>
-          <md-input-container :class="{'md-input-invalid': errors.has('UserName')}">
-            <label>User Name</label>
-            <md-input name="Username" data-vv-name="Username" data-vv-rules="required" type="Username" v-model="credentials.Username" v-validate :disabled="state.loading"></md-input>
-            <span class="md-error">{{errors.first('Username')}}</span>
-          </md-input-container>
-          <md-input-container :class="{'md-input-invalid': errors.has('Email')}">
-            <label>Email</label>
-            <md-input name="Email" data-vv-name="Email" data-vv-rules="required|email|min:6" type="email" v-model="credentials.Email" v-validate :disabled="state.loading"></md-input>
-            <span class="md-error">{{errors.first('Email')}}</span>
-          </md-input-container>
-          <md-input-container md-has-password :class="{'md-input-invalid': errors.has('Password')}">
-            <label>Password</label>
-            <md-input name="Password" data-vv-name="Password" data-vv-rules="required|min:6" type="password" v-model="credentials.Password" v-validate :disabled="state.loading"></md-input>
-            <span class="md-error">{{errors.first('Password')}}</span>
-          </md-input-container>
-          <md-input-container md-has-password :class="{'md-input-invalid': errors.has('ConfirmPassword')}">
-            <label>Confirm Password</label>
-            <md-input name="ConfirmPassword" data-vv-name="ConfirmPassword" data-vv-rules="required|confirmed:Password" type="password" v-model="credentials.ConfirmPassword" v-validate :disabled="state.loading"></md-input>
-            <span class="md-error">{{errors.first('ConfirmPassword')}}</span>
-          </md-input-container>
-         <md-button class="md-raised md-accent" id="btnSubmit" @click.native="formValidate" :disabled="state.loading">Register</md-button>
-        </div>
-        <div class="text-right">
-          <router-link class="md-accent" tag="md-button" to="/signin">Already have an account?</router-link>
-        </div>
-      </md-whiteframe>
-    </md-layout>
-    <md-layout></md-layout>
-  </md-layout>
+    <div>
+        <form novalidate class="md-layout" @submit.prevent="validateUser">
+          <md-card class="md-layout-item md-size-50 md-small-size-100">
+            <md-card-header>
+              <div class="md-title">Register</div>
+            </md-card-header>
+    
+            <md-card-content>
+                    <div class="md-layout md-gutter">
+                            <div class="md-layout-item md-small-size-100">
+                              <md-field :class="getValidationClass('FirstName')">
+                                <label for="first-name">First Name</label>
+                                <md-input name="user-name" id="user-name" autocomplete="given-name" v-model="form.FirstName" :disabled="sending" />
+                                <span class="md-error" v-if="!$v.form.FirstName.required">The first name is required</span>
+                                <span class="md-error" v-else-if="!$v.form.FirstName.minlength">Invalid first name</span>
+                              </md-field>
+                            </div>
+                          </div>
+                          <div class="md-layout md-gutter">
+                                <div class="md-layout-item md-small-size-100">
+                                  <md-field :class="getValidationClass('lastName')">
+                                    <label for="last-name">Last Name</label>
+                                    <md-input name="last-name" id="last-name" autocomplete="given-name" v-model="form.LastName" :disabled="sending" />
+                                    <span class="md-error" v-if="!$v.form.LastName.required">The last name is required</span>
+                                    <span class="md-error" v-else-if="!$v.form.LastName.minlength">Invalid last name</span>
+                                  </md-field>
+                                </div>
+                              </div>
+              <div class="md-layout md-gutter">
+                <div class="md-layout-item md-small-size-100">
+                  <md-field :class="getValidationClass('userName')">
+                    <label for="user-name">User Name</label>
+                    <md-input name="user-name" id="user-name" autocomplete="given-name" v-model="form.UserName" :disabled="sending" />
+                    <span class="md-error" v-if="!$v.form.UserName.required">The user name is required</span>
+                    <span class="md-error" v-else-if="!$v.form.UserName.minlength">Invalid user name</span>
+                  </md-field>
+                </div>
+              </div>
+              <md-field :class="getValidationClass('email')">
+                    <label for="email">Email</label>
+                    <md-input type="email" name="email" id="email" autocomplete="email" v-model="form.Email" :disabled="sending" />
+                    <span class="md-error" v-if="!$v.form.Email.required">The email is required</span>
+                    <span class="md-error" v-else-if="!$v.form.Email.email">Invalid email</span>
+                  </md-field>
+              
+
+            <div class="md-layout md-gutter">
+                <div class="md-layout-item md-small-size-100">
+                  <md-field :class="getValidationClass('Password')">
+                    <label for="password">Password</label>
+                    <md-input name="password" id="password" type="password" v-model="form.Password" :disabled="sending" />
+                    <span class="md-error" v-if="!$v.form.Password.required">The password is required</span>
+                    <span class="md-error" v-else-if="!$v.form.Password.minlength">Invalid password</span>
+                  </md-field>
+                </div>
+              </div>
+              <div class="md-layout md-gutter">
+                    <div class="md-layout-item md-small-size-100">
+                      <md-field :class="getValidationClass('Password')">
+                        <label for="user-name">Confirm Password</label>
+                        <md-input name="password" id="password" type="password" v-model="form.ConfirmPassword" :disabled="sending" />
+                        <span class="md-error" v-if="!$v.form.Password.required">The password is required</span>
+                        <span class="md-error" v-else-if="!$v.form.Password.minlength">Invalid password</span>
+                      </md-field>
+                    </div>
+                  </div>
+            </md-card-content>
+    
+            <md-progress-bar md-mode="indeterminate" v-if="sending" />
+    
+            <md-card-actions>
+            <router-link class="md-primary" tag="md-button" to="/signin">Already have an account?</router-link>
+              <md-button type="submit" class="md-primary" :disabled="sending">Register</md-button>
+            </md-card-actions>
+          </md-card>
+    
+          <md-snackbar :md-active.sync="userSaved">The user {{ form.UserName }} was registered with success!</md-snackbar>
+        </form>
+      </div>
 </template>
 <script>
   import { mapActions } from 'vuex'
+  import { validationMixin } from 'vuelidate'
+  import {
+    required,
+    email,
+    minLength
+  } from 'vuelidate/lib/validators'
 
   export default {
-    data () {
-      return {
-        credentials: {
-          FirstName: 'Aaron',
-          LastName: 'Ramsey',
-          Username: 'aaron',
-          Email: 'aaron@test.com',
-          Password: '123456zZ',
-          ConfirmPassword: '123456zZ'
+    name: 'FormValidation',
+    mixins: [validationMixin],
+    data: () => ({
+      form: {
+        FirstName: 'Askhat',
+        LastName: 'Tuyenbayev',
+        UserName: 'kryacer',
+        Email: 'tm.askhat@gmail.com',
+        Password: '123456zZ',
+        ConfirmPassword: '123456zZ'
+      },
+      sending: false,
+      userSaved: false,
+    }),
+    validations: {
+      form: {
+        FirstName: {
+          required,
+          minLength: minLength(3)
         },
-        state: {
-          loading: false
+        LastName: {
+          required,
+          minLength: minLength(3)
+        },
+        UserName: {
+          required,
+          minLength: minLength(3)
+        },
+        Password: {
+          required,
+          minLength: minLength(6)
+        },
+        Email: {
+          required,
+          email
         }
       }
     },
     methods: {
-      ...mapActions(['signup']),
-      formValidate (event) {
-        event.preventDefault()
-        this.$validator.validateAll().then(success => {
-          if (!success) return
-          this.state.loading = true
+      getValidationClass (fieldName) {
+        const field = this.$v.form[fieldName]
 
-          this.signup(this.credentials)
+        if (field) {
+          return {
+            'md-invalid': field.$invalid && field.$dirty
+          }
+        }
+        return ""
+      },
+      ...mapActions(['signup']),
+      
+      clearForm () {
+        this.$v.$reset()
+        this.form.FirstName = null
+        this.form.LastName = null
+        this.form.UserName = null
+        this.form.Email = null
+        this.form.Password = null
+        this.form.ConfirmPassword = null
+      },
+      
+      validateUser () {
+        this.$v.$touch()
+
+        if (!this.$v.$invalid) {
+          this.sending = true
+
+          this.signup(this.form)
             .catch(err => {
+              console.dir(err)
               if (err.response && err.response.status === 400) {
-                
                 this.$toast.error({
-                  
                   title: err.response.statusText,
-                  // message: err.response.data,
                   timeOut: 2500,
                     message: err.response.data.ModelState[''][0]
                 })
@@ -95,13 +172,26 @@
                 })
               }
             })
-            .then(() => {
-              this.state.loading = false
-              // 
+            .then(()=> {
+              this.sending = false
+              this.userSaved = true
             })
-        })
-        
+        }
       }
     }
   }
 </script>
+
+<style  scoped>
+  .md-progress-bar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+  }
+  
+  .md-card{
+      overflow: hidden;
+      margin: 0 auto;
+  }
+</style>

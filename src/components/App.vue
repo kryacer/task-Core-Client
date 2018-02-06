@@ -49,6 +49,13 @@
       </md-list>
 
       <md-list v-show="isAuthenticated">
+        
+        <md-list-item>
+          <md-icon>home</md-icon>
+          <span class="md-list-item-text">
+            <router-link to="/">Home</router-link>
+          </span>
+        </md-list-item>
         <md-subheader>
           <span>Account</span>
         </md-subheader>
@@ -73,6 +80,9 @@
             <router-link to="/tasks">Tasks</router-link>
           </span>
         </md-list-item>
+        <md-subheader>
+          <span>Info</span>
+        </md-subheader>
         <md-list-item>
           <md-icon>phone</md-icon>
           <span class="md-list-item-text">
@@ -148,7 +158,8 @@
     data: () => ({
       showNavigation: false,
       showSidepanel: false,
-      active: false
+      active: false,
+      transitionName: null
     }),
     watch: {
       isAuthenticated () {
@@ -174,8 +185,10 @@
       ...mapActions(['signout']),
       onCancel () {
       },
-      onConfirm () {
+      onConfirm () {  
+        // if (type === 'ok') {
           this.signout()
+        // }
       }
     }
   }

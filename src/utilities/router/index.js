@@ -16,10 +16,10 @@ import Profile from 'components/Account/Profile.vue'
 
 // Tasks
 // eslint-disable-next-line
-import Tasks from 'components/Management/Tasks/index.vue'
-import TasksList from 'components/Management/Tasks/List.vue'
-import TasksCreate from 'components/Management/Tasks/Create.vue'
-import TasksDetails from 'components/Management/Tasks/Details.vue'
+import Tasks from 'components/Tasks/index.vue'
+import TasksTabs from 'components/Tasks/Tabs.vue'
+import TasksCreate from 'components/Tasks/Undone/AddTask.vue'
+import TasksDetails from 'components/Tasks/Done/Details.vue'
 
 Vue.use(Router)
 
@@ -93,7 +93,7 @@ const router = new Router({
       children: [
         {
           path: '',
-          component: TasksList
+          component: TasksTabs
         },
         {
           path: 'create',
@@ -105,11 +105,6 @@ const router = new Router({
           component: TasksDetails
         }
       ]
-    },
-  
-    {
-      path: '*',
-      redirect: '/error/404'
     }
   ]
 })
@@ -120,7 +115,7 @@ router.beforeEach((to, from, next) => {
 
     if (notValid.lastIndexOf(to.path) >= 0) {
       next({
-        path: '/dashboard'
+        path: '/'
       })
     } else if (to.path === '/signout') {
       store.commit('removeAuthentication')

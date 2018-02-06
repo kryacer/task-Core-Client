@@ -38,13 +38,12 @@ export default {
       })
     },
     signout (context) {
-      // account
-      //   .signout()
-      //   .then(() => {
-      //     context.commit('removeAuthentication')
-      //   })
-      //   .catch(() => {})
-        context.commit('removeAuthentication')
+      account
+        .signout()
+        .then(() => {
+          context.commit('removeAuthentication')
+        })
+        .catch(() => {})
     },
     // getUserInfo (context) {
     //   // account
