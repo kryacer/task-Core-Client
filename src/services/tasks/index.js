@@ -2,40 +2,26 @@ import api from 'api'
 // eslint-disable-next-line
 import axios from 'utilities/axios'
 
- const path = '/api/Tasks'
-
 export default {
   create (obj) {
     return axios.post(`${api.url}/Task/Add`, obj)
   },
-
-  getDetails (obj) {
-    return axios.get(api.url + path, obj)
-  },
-
-  edit (obj) {
-    return axios.post(api.url + path, obj)
-  },
-
-  remove (obj) {
-    return axios.post(`${api.url + path}/Remove/?id=${obj.id}`, obj)
-  },
-
-
-  delete (obj) {
-    return axios.post(api.url + path, obj)
-  },
-
-  list () {
-    return axios.get(`${api.url}/Task/GetAll`)
-  },
   oppositeMark (obj){
     return axios.post(`${api.url}/task/oppositeMark`, obj)
   },
-  // list (type, obj) {
-  //   return axios.get(`${api.url + path}?type=${type}${this.objToQuery(obj)}`)
-  // },
-
+  list () {
+    return axios.get(`${api.url}/Task/GetAll`)
+  },
+  delete (id) {
+    return axios.delete(`${api.url}/Task/delete?id=${id}`)
+  },
+  edit (obj) {
+    return axios.put(`${api.url}/task/update`, obj)
+  },
+  search (text){
+    return axios.get(`${api.url}/task/search?query=${text}`)
+  },
+  
   objToQuery (obj) {
     let query = ''
     let val = ''

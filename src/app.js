@@ -6,7 +6,7 @@ import router from 'utilities/router'
 import store from 'utilities/store'
 
 sync(store, router)
-
+// Vue.filter('snippet',(value) => value.slice(0,100))
 const app = new Vue({
   router,
   store,

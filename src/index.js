@@ -6,7 +6,7 @@ import 'utilities/cxlt-vue2-toastr'
 
 /* eslint-disable */
 import 'utilities/axios'
-import 'components/_custom'
+//import 'components/_custom'
 /* eslint-enable */
 
 import 'utilities/vue-mixins'
@@ -19,4 +19,15 @@ import 'assets/css/animations.css'
 
 import { app } from './app'
 
+module.exports = function debounce (fn, delay) {
+    let timeoutID = null
+    return (()=> {
+      clearTimeout(timeoutID)
+      const args = []
+      const that = this
+      timeoutID = setTimeout(() => {
+        fn.apply(that, args)
+      }, delay)
+    })
+  }
 app.$mount('#app')
