@@ -16,10 +16,8 @@ import Profile from 'components/Account/Profile.vue'
 
 // Tasks
 // eslint-disable-next-line
-import Tasks from 'components/Tasks/index.vue'
 import TasksTabs from 'components/Tasks/Tabs.vue'
-import TasksCreate from 'components/Tasks/Undone/AddTask.vue'
-import TasksDetails from 'components/Tasks/Done/Details.vue'
+import TasksCreate from 'components/Tasks/AddTask.vue'
 
 Vue.use(Router)
 
@@ -86,23 +84,14 @@ const router = new Router({
     {
       // Tasks
       path: '/tasks',
-      component: Tasks,
+      component: TasksTabs,
       meta: {
         requiresAuth: true
       },
       children: [
         {
-          path: '',
-          component: TasksTabs
-        },
-        {
           path: 'create',
           component: TasksCreate
-        },
-        {
-          name: 'task-details',
-          path: 'details',
-          component: TasksDetails
         }
       ]
     }

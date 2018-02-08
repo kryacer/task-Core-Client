@@ -63,11 +63,11 @@
 </template>
 <script>
   import tasks from 'services/tasks'
-  import tagInput from 'components/Tasks/Undone/tag-input.vue'
-  import tagList from 'components/Tasks/Undone/tag-list.vue'
+  import tagInput from 'components/Tasks/tag-input.vue'
+  import tagList from 'components/Tasks/tag-list.vue'
   // import account from 'services/account'
  // import { mapState } from 'vuex'
-  import Datepicker from 'vuejs-datepicker'
+  // import Datepicker from 'vuejs-datepicker'
   // import moment from 'moment'
   import { validationMixin } from 'vuelidate'
   import {
@@ -79,7 +79,7 @@
     name: 'FormValidation',
     mixins: [validationMixin],
     components: {
-      Datepicker, tagInput, tagList
+       tagInput, tagList
     },
     data: ()=> ({
       form: {

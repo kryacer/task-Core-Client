@@ -17,31 +17,3 @@ import Vue from 'vue'
 //  Vue.use(MdEmptyState)
 
   // Vue.use(VueMaterial)
-
-// Vue.material.registerTheme({
-//   default: {
-//     primary: 'red',
-//     accent: 'blue',  
-//     warn: 'red',
-//     background: 'white'
-//   },
-//   invert: {
-//     primary: 'pink',
-//     accent: 'indigo'
-//   },
-//   'theme-danger': {
-//     primary: 'red'
-//   },
-//   'theme-warn': {
-//     primary: 'deep-orange'
-//   },
-//   'theme-normal': {
-//     primary: 'orange'
-//   },
-//   'theme-primary': {
-//     primary: 'lime'
-//   },
-//   'theme-success': {
-//     primary: 'green'
-//   }
-// })

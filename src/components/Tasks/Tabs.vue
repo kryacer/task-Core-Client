@@ -102,13 +102,13 @@
 
 <script>
   import tasks from 'services/tasks'
-  import debounce from 'deb'
+  // import debounce from 'deb'
 
   export default {
     name: 'TabRouter',
     data: ()=>({
       search:'',
-      //debouncedInput: '',
+      // debouncedInput: '',
       tasks: [],
       cardView: false,
       currentIndex: '',
