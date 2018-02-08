@@ -67,11 +67,10 @@
   import tagList from 'components/Tasks/tag-list.vue'
   // import account from 'services/account'
  // import { mapState } from 'vuex'
-<<<<<<< HEAD:src/components/Tasks/AddTask.vue
   // import Datepicker from 'vuejs-datepicker'
-=======
-  //import Datepicker from 'vuejs-datepicker'
->>>>>>> master:src/components/Tasks/AddTask.vue
+
+  // import Datepicker from 'vuejs-datepicker'
+
   // import moment from 'moment'
   import { validationMixin } from 'vuelidate'
   import {

@@ -1,7 +1,7 @@
 <template>
   <div>
        <!--TAB 1-->
-       <router-link class="md-dense md-primary add"  tag="md-button" to="/tasks/Create">Create</router-link>
+       <router-link class="md-primary add"  tag="md-button" to="/tasks/Create">Create</router-link>
        <md-field class="search"><md-input placeholder="Search by name..." v-model.trim="search" @keyup.enter="searchOnCards" /></md-field>
     <md-tabs class="md-transparent" md-alignment="fixed" md-sync-route >
       <md-tab id="tab-undone" md-label="Undone">
@@ -41,6 +41,7 @@
                   <p>DeadLine: {{new Date(task.deadLine).toLocaleDateString("ru-RU")}}</p>
                   Mark as done:
                   <md-checkbox style="display:inline-flex;" v-model="task.isDone" @change="changeMark(index)"></md-checkbox>
+
                 </md-card-content>
                 
                 <md-card-actions>
