@@ -21,7 +21,15 @@ export default {
   search (text){
     return axios.get(`${api.url}/task/search?query=${text}`)
   },
-  
+  tagsFilter (tags){
+    const retArr = []
+    for(let i=0; i<tags.length; i+=1){
+      if(!tags[i].includes(' ')){
+        retArr.push(tags[i].toLowerCase())
+      }
+     }
+     return retArr
+ },
   objToQuery (obj) {
     let query = ''
     let val = ''

@@ -44,8 +44,8 @@
                         <div class="md-layout-item md-small-size-100">
                           <md-field>
                             <label>Tags (space separated)</label>
-                            <tag-input v-model="form.tags" :disabled="sending"></tag-input>
-                            <tag-list v-model="form.tags" style="padding: 5px 0" :disabled="sending"></tag-list>
+                            <tag-input v-model="form.Tags" :disabled="sending"></tag-input>
+                            <tag-list v-model="form.Tags" style="padding: 5px 0" :disabled="sending"></tag-list>
                           </md-field>
                         </div>
                       </div>
@@ -90,7 +90,7 @@
           Description: '',
           // IsDone: false,
           DeadLine: '',
-          tags: []
+          Tags: []
         },
         sending: false,
         taskSaved: false
@@ -125,6 +125,7 @@
       //   const myDate = new Date()
       //   return new Date(myDate.setTime(myDate.getTime() + 7 * 86400000))
       // },
+      
       getValidationClass (fieldName) {
         const field = this.$v.form[fieldName]
 
@@ -157,6 +158,7 @@
           //     this.sending = false
           //     this.taskSaved = true
           //   })
+          tasks.tagsFilter(this.form.tags)
           tasks.create(this.form)
             .catch(err => {
               this.$toast.error({
