@@ -2,14 +2,14 @@
   <div>
        <!--TAB 1-->
        <router-link class="md-primary add"  tag="md-button" to="/tasks/Create">Create</router-link>
-       <div class="md-toolbar-section-end">
-        <md-button @click="showSidepanel = true">Tags</md-button>
+       <div class="tags">
+        <md-button @click="showSidepanel = true" class="white">Tags</md-button>
       </div>
-       <md-field class="search"><md-input placeholder="Search by name..." type="search" v-model.trim.lazy="search" @keyup.enter="searchOnCards" /></md-field>
+       <md-field class="search"><md-input placeholder="Search by name..." type="search" v-model.trim.lazy="search" @keyup.enter="searchOnCards" @keyup.delete="clearSearch" @input="clearSearch"/></md-field>
     <md-tabs class="md-transparent" md-alignment="fixed" md-sync-route >
       <md-tab id="tab-undone" md-label="Undone">
         
-        <md-card  md-with-hover v-if="!task.isDone" v-for="(task,index) in tasks" :key="task.id" >
+        <md-card  md-with-hover v-if="!task.isDone" v-for="(task,index) in filteredList" :key="task.taskId" >
         <md-ripple v-bind:class="classObject(task.deadLine, task.isDone)">
           <md-card-header>
             <div class="md-title">{{task.name}}</div>
@@ -23,7 +23,7 @@
             <md-checkbox  v-model="task.isDone" @change="changeMark(index)"></md-checkbox>
             </div>
             <div>
-              <md-button class="md-raised tag" v-for="tag in tasks[index].tags" :key="tag">{{tag}}</md-button>
+              <md-button class="md-raised tag" v-for="tag in filteredList[index].tags" :key="tag">{{tag}}</md-button>
             </div>
             
           </md-card-content>
@@ -39,7 +39,7 @@
     </md-tab>
         <!--TAB 2-->
       <md-tab id="tab-done" md-label="Done">
-          <md-card  md-with-hover v-if="task.isDone" v-for="(task,index) in tasks" :key="task.id"  >
+          <md-card  md-with-hover v-if="task.isDone" v-for="(task,index) in filteredList" :key="task.taskId"  >
               <md-ripple v-bind:class="classObject(task.deadLine, task.isDone)">
                 <md-card-header>
                   <div class="md-title">{{task.name}}</div>
@@ -53,7 +53,7 @@
                     <md-checkbox  v-model="task.isDone" @change="changeMark(index)"></md-checkbox>
                   </div>
                   <div>
-                    <md-button class="md-raised tag">asdf</md-button>
+                    <md-button class="md-raised tag" v-for="tag in filteredList[index].tags" :key="tag">{{tag}}</md-button>
                   </div>
                 </md-card-content>
                 
@@ -104,8 +104,8 @@
                     <md-checkbox v-model="preView.IsDone"></md-checkbox>
                     <md-field>
                       <label>Tags (space separated)</label>
-                      <tag-input v-model="preView.Tags" :disabled="sending"></tag-input>
-                      <tag-list v-model="preView.Tags" style="padding: 5px 0" :disabled="sending"></tag-list>
+                      <tag-input v-model="preView.Tags" ></tag-input>
+                      <tag-list v-model="preView.Tags" style="padding: 5px 0"></tag-list>
                     </md-field>
                     <md-button class="md-primary inlineBlock right" @click="Save">Save</md-button>
                     </div>
@@ -126,9 +126,14 @@
         </md-toolbar>
   
         <md-list>
-          <md-list-item v-for="tag in TagList" :key="tag.tagId">
+            <md-list-item>
+                <span class="md-list-item-text">
+                  <md-button @click="clearSearch">All</md-button>
+                </span>
+              </md-list-item>
+          <md-list-item v-for="(tag,index) in TagList" :key="tag.tagId">
             <span class="md-list-item-text">
-              <md-button>{{tag.Name}}</md-button>
+              <md-button @click="tagSearch(index)">{{tag.name}}</md-button>
             </span>
           </md-list-item>
         </md-list>
@@ -137,7 +142,7 @@
 </template>
 
 <script>
-  import tasks from 'services/tasks'
+  import taskService from 'services/tasks'
  // import { _ } from 'lodash'
  import tagInput from 'components/Tasks/tag-input.vue'
   import tagList from 'components/Tasks/tag-list.vue'
@@ -151,6 +156,8 @@
       search:'',
        // debouncedInput: '',
       tasks: null,
+      searchResult: null,
+      // tagResult:null,
       cardView: false,
       currentIndex: '',
       deleteSync: false,
@@ -171,7 +178,7 @@
     }),
     methods: {
       changeMark (index) { // opposite mark
-        tasks.oppositeMark(this.tasks[index])
+        taskService.oppositeMark(this.tasks[index])
               .catch(err => {
               this.$toast.error({
                 title: err.response.data.Message,
@@ -197,7 +204,7 @@
       onCancel () {
       },
       onConfirm () { // delete
-        tasks.delete(this.tasks[this.currentIndex].taskId)
+        taskService.delete(this.tasks[this.currentIndex].taskId)
               .catch(err => {
                 this.$toast.error({
                 title: err.response.data.Message,
@@ -211,8 +218,8 @@
         return new Date(date1).getTime() - new Date().getTime();
       },
       Save (){// update task
-        this.preView.Tags = tasks.tagsFilter(this.preView.Tags)
-        tasks.edit(this.preView)
+        this.preView.Tags = taskService.tagsFilter(this.preView.Tags)
+        taskService.edit(this.preView)
               .catch(err => {
                 this.$toast.error({
                 title: err.response.data.Message,
@@ -246,30 +253,43 @@
         },
         searchOnCards (){
           if(this.search !=='')
-          tasks.search(this.search.toLowerCase())
+          taskService.search(this.search.toLowerCase())
               .then(response => {
-              this.tasks = response.data
+              this.searchResult = response.data
               })
         },
-        
+        clearSearch (){
+          this.searchResult =null
+        },
+        tagSearch (index){
+          taskService.searchByTag(this.TagList[index].name)
+          .then(response => {
+              this.searchResult = response.data
+              console.log(this.tasks)
+              })
+        }
     },
-    // computed: {
-    //             filteredList () {
-    //                     return this.tasks.filter(task => task.name.toLowerCase().includes(this.search.toLowerCase()))
-    //             }
-    //         },
+    computed: {
+                filteredList () {
+                        if(this.searchResult !==null){
+                          return this.searchResult  
+                          // return this.tasks.filter(task => task.name.toLowerCase().includes(this.search.toLowerCase()))
+                        }
+                        
+                        return this.tasks
+                }
+            },
     created (){
-      tasks.list()
+      taskService.list()
             .then(response => {
               this.tasks = response.data
             //   for(let i=0; i<this.tasks.length; i+=1){
             //    this.tasks[i].deadLine = new Date(this.tasks[i].deadLine).toLocaleDateString("ru-RU",this.options);
             //  }
             })
-            tasks.getTags()
+            taskService.getTags()
             .then(response => {
               this.TagList = response.data
-            
             })
              
           }
@@ -336,6 +356,14 @@
   }
   .md-card-header{
     padding: 5px 0 0 15px;
-
+  }
+  .tags{
+    position:absolute;
+    top: 8px;
+    right: 0px;
+  }
+  .white{
+    color:white;
+    font-size: 15px;
   }
 </style>

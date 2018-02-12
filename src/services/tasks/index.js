@@ -21,6 +21,9 @@ export default {
   search (text){
     return axios.get(`${api.url}/task/search?query=${text}`)
   },
+  searchByTag (tag){
+    return axios.get(`${api.url}/task/searchByTag?tag=${tag}`)
+  },
   tagsFilter (tags){
     const arr1 = []
     for(let i=0; i<tags.length; i+=1){
