@@ -275,7 +275,6 @@
                           return this.searchResult  
                           // return this.tasks.filter(task => task.name.toLowerCase().includes(this.search.toLowerCase()))
                         }
-                        
                         return this.tasks
                 }
             },
