@@ -23,7 +23,7 @@
             <md-checkbox  v-model="task.isDone" @change="changeMark(index)"></md-checkbox>
             </div>
             <div>
-              <md-button class="md-raised tag" v-for="tag in filteredList[index].tags" :key="tag">{{tag}}</md-button>
+              <md-button class="md-raised tag" v-for="tag in filteredList[index].tags" :key="tag" @click="tagSearch(tag)">{{tag}}</md-button>
             </div>
             
           </md-card-content>
@@ -53,7 +53,7 @@
                     <md-checkbox  v-model="task.isDone" @change="changeMark(index)"></md-checkbox>
                   </div>
                   <div>
-                    <md-button class="md-raised tag" v-for="tag in filteredList[index].tags" :key="tag">{{tag}}</md-button>
+                    <md-button class="md-raised tag" v-for="tag in filteredList[index].tags" :key="tag" @click="tagSearch(tag)">{{tag}}</md-button>
                   </div>
                 </md-card-content>
                 
@@ -84,7 +84,7 @@
                 <md-checkbox disabled v-model="preView.IsDone"></md-checkbox>
                 </div>
                 <div>
-                  <md-button class="md-raised tag" v-for="tag in preView.Tags" :key="tag">{{tag}}</md-button>
+                  <md-button disabled class="md-raised tag" style="color:black" v-for="tag in preView.Tags" :key="tag">{{tag}}</md-button>
                 </div>
           </md-tab>
           <md-tab  md-icon="edit">
@@ -105,8 +105,9 @@
                     <md-field>
                       <label>Tags (space separated)</label>
                       <tag-input v-model="preView.Tags" ></tag-input>
-                      <tag-list v-model="preView.Tags" style="padding: 5px 0"></tag-list>
+                      
                     </md-field>
+                    <tag-list v-model="preView.Tags" style="padding: 5px 0"></tag-list>
                     <md-button class="md-primary inlineBlock right" @click="Save">Save</md-button>
                     </div>
           </md-tab>
@@ -262,7 +263,14 @@
           this.searchResult =null
         },
         tagSearch (index){
-          taskService.searchByTag(this.TagList[index].name)
+          let searchString = ''
+          if(typeof index ==='string'){
+            searchString =index
+          }
+          if(typeof index ==='number'){
+            searchString = this.TagList[index].name
+          }
+          taskService.searchByTag(searchString)
           .then(response => {
               this.searchResult = response.data
               console.log(this.tasks)

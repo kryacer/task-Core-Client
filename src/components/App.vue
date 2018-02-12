@@ -162,9 +162,13 @@
 </script>
 
 <style>
+
   .page-container {
     /* min-height: 300px; */
-    min-height: calc(100vh - 100px - 128px - 24px);
+     min-height: calc(125vh - 100px - 128px - 24px); 
+     /* min-height: 300px;  */
+    
+    background: rgb(255, 255, 255);
     overflow: hidden;
     position: relative;
     border: 1px solid rgba(#000, .12);

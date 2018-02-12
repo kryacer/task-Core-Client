@@ -45,8 +45,9 @@
                           <md-field>
                             <label>Tags (space separated)</label>
                             <tag-input v-model="form.Tags" :disabled="sending"></tag-input>
-                            <tag-list v-model="form.Tags" style="padding: 5px 0" :disabled="sending"></tag-list>
+                            
                           </md-field>
+                          <tag-list v-model="form.Tags" style="padding: 5px 0" :disabled="sending"></tag-list>
                         </div>
                       </div>
         </md-card-content>
