@@ -137,6 +137,7 @@
         return ""
       },
       validateTask () {
+        this.form.Tags = tasks.tagsFilter(this.form.Tags)
         this.$v.$touch()
 
         if (!this.$v.$invalid) {
@@ -158,7 +159,7 @@
           //     this.sending = false
           //     this.taskSaved = true
           //   })
-          tasks.tagsFilter(this.form.tags)
+          
           tasks.create(this.form)
             .catch(err => {
               this.$toast.error({

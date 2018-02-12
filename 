@@ -1,0 +1,12 @@
+[33m103b896[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;32mwork[m[33m)[m CRUD tags
+[33m93345e7[m resolve conflict
+[33m9caabe6[m Merge branch 'master' into temporary2
+[33mbb0fe72[m little refactory 2
+[33m0aebe95[m little refactory
+[33m7531f40[m Added colors
+[33m1c94465[m task adding, task View, task as done by checkbox, auth_reg
+[33m8535370[m start migrate to new vMaterial
+[33med5a8b0[m fixed task request
+[33mf6e67b3[m Added tags
+[33m0b36dc1[m Added tags
+[33m03ee0ab[m vue material 0.8.1

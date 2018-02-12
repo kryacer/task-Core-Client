@@ -22,24 +22,16 @@ export default {
     return axios.get(`${api.url}/task/search?query=${text}`)
   },
   tagsFilter (tags){
-    const retArr = []
+    const arr1 = []
     for(let i=0; i<tags.length; i+=1){
-      if(!tags[i].includes(' ')){
-        retArr.push(tags[i].toLowerCase())
+      if(tags[i] !==''){
+        arr1.push(tags[i].toLowerCase())
       }
      }
-     return retArr
+     const uniqArray = Array.from(new Set(arr1))
+     return uniqArray
  },
-  objToQuery (obj) {
-    let query = ''
-    let val = ''
-    // eslint-disable-next-line
-    for (const prop in obj) {
-      val = obj[prop]
-      if ((val && (val.trim && val.trim() !== '')) || val > 0) {
-        query += `&${prop}=${val}`
-      }
-    }
-    return query
-  }
+ getTags (){
+   return axios.get(`${api.url}/Task/GetAllTags`)
+ }
 }

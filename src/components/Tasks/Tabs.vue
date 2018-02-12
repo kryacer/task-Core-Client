@@ -2,6 +2,9 @@
   <div>
        <!--TAB 1-->
        <router-link class="md-primary add"  tag="md-button" to="/tasks/Create">Create</router-link>
+       <div class="md-toolbar-section-end">
+        <md-button @click="showSidepanel = true">Tags</md-button>
+      </div>
        <md-field class="search"><md-input placeholder="Search by name..." type="search" v-model.trim.lazy="search" @keyup.enter="searchOnCards" /></md-field>
     <md-tabs class="md-transparent" md-alignment="fixed" md-sync-route >
       <md-tab id="tab-undone" md-label="Undone">
@@ -117,6 +120,19 @@
       md-cancel-text="Cancel"
       @md-cancel="onCancel"
       @md-confirm="onConfirm" />
+      <md-drawer class="md-right" :md-active.sync="showSidepanel">
+        <md-toolbar class="md-transparent" md-elevation="0">
+          <span class="md-title">Tags</span>
+        </md-toolbar>
+  
+        <md-list>
+          <md-list-item v-for="tag in TagList" :key="tag.tagId">
+            <span class="md-list-item-text">
+              <md-button>{{tag.Name}}</md-button>
+            </span>
+          </md-list-item>
+        </md-list>
+      </md-drawer>
   </div>
 </template>
 
@@ -138,6 +154,8 @@
       cardView: false,
       currentIndex: '',
       deleteSync: false,
+      showSidepanel: false,
+      TagList:null,
       preView:{
         TaskId: '',
         Name: '',
@@ -170,7 +188,7 @@
         this.preView.DeadLine = this.tasks[index].deadLine
         this.preView.IsDone = this.tasks[index].isDone
         this.preView.Tags = this.tasks[index].tags
-        console.log(this.tasks)
+        console.log(this.TagList)
       },
       drop (index){// before delete
         this.currentIndex = index
@@ -193,7 +211,7 @@
         return new Date(date1).getTime() - new Date().getTime();
       },
       Save (){// update task
-        tasks.tagsFilter(this.preView.Tags)
+        this.preView.Tags = tasks.tagsFilter(this.preView.Tags)
         tasks.edit(this.preView)
               .catch(err => {
                 this.$toast.error({
@@ -233,12 +251,6 @@
               this.tasks = response.data
               })
         },
-        // clear (){
-        //   this.search = "Hey";
-        // }
-        // search: _(e=> {
-        //   this.debouncedInput = e.target.value;
-        // }, 500)
         
     },
     // computed: {
@@ -253,6 +265,11 @@
             //   for(let i=0; i<this.tasks.length; i+=1){
             //    this.tasks[i].deadLine = new Date(this.tasks[i].deadLine).toLocaleDateString("ru-RU",this.options);
             //  }
+            })
+            tasks.getTags()
+            .then(response => {
+              this.TagList = response.data
+            
             })
              
           }
