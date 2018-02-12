@@ -3,6 +3,7 @@ import store from 'utilities/store'
 import router from 'utilities/router'
 
  axios.defaults.withCredentials = true
+ axios.headers = {'Access-Control-Allow-Origin': '*'}
 axios.interceptors.request.use(
   cfg => {
     if (store.getters.isAuthenticated) {
@@ -10,6 +11,7 @@ axios.interceptors.request.use(
       
       // eslint-disable-next-line
       cfg.headers.Authorization = `${auth.token_type} ${auth.access_token}`
+      
       // console.log(cfg)
     }
     return cfg

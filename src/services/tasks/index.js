@@ -9,8 +9,8 @@ export default {
   oppositeMark (obj){
     return axios.post(`${api.url}/task/oppositeMark`, obj)
   },
-  list () {
-    return axios.get(`${api.url}/Task/GetAll`)
+  list (page) {
+    return axios.get(`${api.url}/Task/GetAllPaged?page=${page}`)
   },
   delete (id) {
     return axios.delete(`${api.url}/Task/delete?id=${id}`)

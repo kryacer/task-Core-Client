@@ -68,9 +68,19 @@
       <!-- <md-tab id="tab-posts" md-label="Empty"></md-tab>
       <md-tab id="tab-favorites" md-label="Empty"></md-tab> -->
     </md-tabs>
-    
-    
-
+   
+  <paginate
+        :page-count="pageCount"
+        :margin-pages="3"
+        :page-range="4"
+        :initial-page="0"
+        :click-handler="clickCallback"
+        :container-class="'pagination'"
+        :page-link-class="'item'"
+        :prev-link-class="'item'"
+        :next-link-class="'item'"
+        :no-li-surround="true"
+      ></paginate>
     <!--Dialogs-->
     <md-dialog :md-active.sync="cardView">
         <md-dialog-title>{{preView.Name}}</md-dialog-title>
@@ -145,6 +155,7 @@
 <script>
   import taskService from 'services/tasks'
  // import { _ } from 'lodash'
+ 
  import tagInput from 'components/Tasks/tag-input.vue'
   import tagList from 'components/Tasks/tag-list.vue'
 
@@ -156,6 +167,7 @@
     data: ()=>({
       search:'',
        // debouncedInput: '',
+       pageCount:1,
       tasks: null,
       searchResult: null,
       // tagResult:null,
@@ -227,6 +239,10 @@
                 message: err.response.data.ModelState
               })
             })
+            taskService.getTags()
+            .then(response => {
+              this.TagList = response.data
+            })
             this.tasks[this.currentIndex].name = this.preView.Name
             this.tasks[this.currentIndex].description = this.preView.Description
             this.tasks[this.currentIndex].deadLine = this.preView.DeadLine
@@ -275,7 +291,14 @@
               this.searchResult = response.data
               console.log(this.tasks)
               })
-        }
+        },
+        clickCallback (pageNum){
+          taskService.list(pageNum)
+            .then(response => {
+              this.tasks = response.data.taskItemDtos
+              this.pageCount = response.data.pageCount
+            })
+    }
     },
     computed: {
                 filteredList () {
@@ -289,7 +312,9 @@
     created (){
       taskService.list()
             .then(response => {
-              this.tasks = response.data
+              this.tasks = response.data.taskItemDtos
+              this.pageCount = response.data.pageCount
+             console.log(response);
             //   for(let i=0; i<this.tasks.length; i+=1){
             //    this.tasks[i].deadLine = new Date(this.tasks[i].deadLine).toLocaleDateString("ru-RU",this.options);
             //  }
@@ -303,7 +328,7 @@
 
   }
 </script>
-<style scoped >
+<style>
 .right{
   float: right;
 }
@@ -370,7 +395,31 @@
     right: 0px;
   }
   .white{
-    color:white;
+    color:white !important;
     font-size: 15px;
   }
+  .pagination {
+    display: inline-block;
+    margin-left: 40%;
+}
+
+  .pagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+  .pagination a.active {
+    background-color: #448aff;
+    color: white;
+    border-radius: 5px;
+}
+
+  .pagination a:hover:not(.active) {
+    background-color: #ddd;
+    border-radius: 5px;
+}
+
+
 </style>
