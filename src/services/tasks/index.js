@@ -18,11 +18,23 @@ export default {
   edit (obj) {
     return axios.put(`${api.url}/task/update`, obj)
   },
-  search (text){
-    return axios.get(`${api.url}/task/search?query=${text}`)
+  search (text, page){
+    return axios.get(`${api.url}/task/search`,
+    {
+      params: {
+        query: text,
+        page
+      }
+    })
   },
-  searchByTag (tag){
-    return axios.get(`${api.url}/task/searchByTag?tag=${tag}`)
+  searchByTag (tag, page){
+    return axios.get(`${api.url}/task/searchByTag`,
+    {
+      params: {
+        tag,
+        page
+      }
+    })
   },
   tagsFilter (tags){
     const arr1 = []

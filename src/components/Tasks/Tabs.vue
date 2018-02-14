@@ -70,11 +70,11 @@
     </md-tabs>
    
   <paginate
-        :page-count="pageCount"
+        :page-count="paginationPages"
         :margin-pages="3"
         :page-range="4"
         :initial-page="0"
-        :click-handler="clickCallback"
+        :click-handler="clickPaginate"
         :container-class="'pagination'"
         :page-link-class="'item'"
         :prev-link-class="'item'"
@@ -167,7 +167,10 @@
     data: ()=>({
       search:'',
        // debouncedInput: '',
-       pageCount:1,
+      pageCount:1,
+      searchPageCount:1,
+      paginationType: '',
+      tagString: '',
       tasks: null,
       searchResult: null,
       // tagResult:null,
@@ -272,27 +275,44 @@
           if(this.search !=='')
           taskService.search(this.search.toLowerCase())
               .then(response => {
-              this.searchResult = response.data
+              this.searchResult = response.data.taskItemDtos
+              this.searchPageCount = response.data.pageCount
+              this.paginationType = 'bySearch'
               })
         },
         clearSearch (){
           this.searchResult =null
         },
         tagSearch (index){
-          let searchString = ''
           if(typeof index ==='string'){
-            searchString =index
+            this.tagString =index
           }
           if(typeof index ==='number'){
-            searchString = this.TagList[index].name
+            this.tagString = this.TagList[index].name
           }
-          taskService.searchByTag(searchString)
+          taskService.searchByTag(this.tagString)
           .then(response => {
-              this.searchResult = response.data
+              this.searchResult = response.data.taskItemDtos
+              this.searchPageCount = response.data.pageCount
+              this.paginationType = 'byTag'
               console.log(this.tasks)
               })
         },
-        clickCallback (pageNum){
+        clickPaginate (pageNum){
+          if(this.paginationType ==='bySearch'){
+              if(this.search !=='')
+             taskService.search(this.search.toLowerCase(),pageNum)
+              .then(response => {
+              this.searchResult = response.data.taskItemDtos
+              })
+          }
+          if(this.paginationType ==='byTag'){
+            taskService.searchByTag(this.tagString, pageNum)
+              .then(response => {
+              this.searchResult = response.data.taskItemDtos
+              console.log(this.tasks)
+              })
+          }
           taskService.list(pageNum)
             .then(response => {
               this.tasks = response.data.taskItemDtos
@@ -307,6 +327,12 @@
                           // return this.tasks.filter(task => task.name.toLowerCase().includes(this.search.toLowerCase()))
                         }
                         return this.tasks
+                },
+                paginationPages (){
+                  if(this.searchResult !==null){
+                      return this.searchPageCount
+                  }
+                  return this.pageCount
                 }
             },
     created (){
@@ -314,17 +340,16 @@
             .then(response => {
               this.tasks = response.data.taskItemDtos
               this.pageCount = response.data.pageCount
-             console.log(response);
-            //   for(let i=0; i<this.tasks.length; i+=1){
-            //    this.tasks[i].deadLine = new Date(this.tasks[i].deadLine).toLocaleDateString("ru-RU",this.options);
-            //  }
             })
             taskService.getTags()
             .then(response => {
               this.TagList = response.data
             })
              
-          }
+          },
+          // beforeMount (){
+          //   this.showPagination = true;
+          // }
 
   }
 </script>

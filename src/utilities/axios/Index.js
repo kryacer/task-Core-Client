@@ -2,8 +2,7 @@ import axios from 'axios'
 import store from 'utilities/store'
 import router from 'utilities/router'
 
- axios.defaults.withCredentials = true
- axios.headers = {'Access-Control-Allow-Origin': '*'}
+axios.defaults.withCredentials = true
 axios.interceptors.request.use(
   cfg => {
     if (store.getters.isAuthenticated) {
